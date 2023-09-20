@@ -8,16 +8,22 @@ vim.wo.signcolumn = "yes"
 vim.o.background = "dark"
 
 vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
+vim.opt.smarttab = true
 vim.opt.smartindent = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.swapfile = false
 
+vim.opt.wrap = false
+
 vim.o.hlsearch = false
 vim.o.mouse = 'a'
-vim.o.breakindent = true
+-- vim.o.breakindent = true
 vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.updatetime = 150
