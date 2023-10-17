@@ -48,6 +48,25 @@ return {
       },
     }
 
+    -- setup search count
+    function searchCount()
+      local search = vim.fn.searchcount({maxcount = 0}) -- maxcount = 0 makes the number not be capped at 99
+
+      local searchCurrent = search.current
+
+      local searchTotal = search.total
+
+      if searchCurrent > 0 then
+        return "/"..vim.fn.getreg("/").." ["..searchCurrent.."/"..searchTotal.."]"
+
+      else
+
+        return ""
+
+      end
+
+    end
+
     -- configure lualine with modified theme
     lualine.setup({
       options = {
@@ -58,6 +77,9 @@ return {
         lualine_b = {'branch', 'diff', 'diagnostics'},
         lualine_c = {'filename'},
         lualine_x = {
+          {
+            searchCount
+          },
           {
             lazy_status.updates,
             cond = lazy_status.has_updates,
