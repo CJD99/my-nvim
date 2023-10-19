@@ -44,3 +44,9 @@ vim.opt.isfname:append("@-@")
 vim.opt.showmode = false
 vim.opt.cmdheight = 0
 vim.opt.iskeyword:append("-")
+
+-- folding options
+vim.opt.fillchars = { fold = " " }
+vim.opt.foldmethod = "indent"
+vim.opt.foldenable = false
+vim.opt.foldlevel = 99
