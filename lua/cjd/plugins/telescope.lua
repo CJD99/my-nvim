@@ -5,10 +5,12 @@ return {
     "nvim-lua/plenary.nvim",
     { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
     "nvim-tree/nvim-web-devicons",
+    'dawsers/telescope-floaterm.nvim',
   },
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
+    telescope.load_extension('floaterm')
 
     telescope.setup({
       defaults = {
@@ -19,6 +21,7 @@ return {
         sorting_strategy = "ascending",
         layout_strategy = "horizontal",
         hl_result_eol = true,
+        find_command = {"rg", "--hiden", "--files"},
         layout_config = {
           horizontal = {
             prompt_position = "top",
@@ -57,6 +60,8 @@ return {
     keymap.set('n', '<Space>fo', builtin.treesitter, { desc = "Fuzzy find treesitter objects" })
     keymap.set('n', '<Space>gb', builtin.git_branches, { desc = "Fuzzy find git branches" })
     keymap.set('n', '<Space>fd', function() builtin.diagnostics({bufnr=0}) end, { desc = "Fuzzy find diagnostics in current buffer" })
+    keymap.set('n', '<Space>ft', ":Telescope floaterm<CR>", { desc = "List all opened floaterms" })
+    -- keymap.set('n', '<Space>fD', function() builtin.diagnostics({}) end, { desc = "Fuzzy find diagnostics in all files" })
   end,
 
 }

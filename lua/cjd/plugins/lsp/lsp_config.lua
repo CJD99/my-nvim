@@ -9,6 +9,8 @@ return {
     -- import lspconfig plugin
     local lspconfig = require("lspconfig")
 
+    local util = require("lspconfig/util")
+
     -- import cmp-nvim-lsp plugin
     local cmp_nvim_lsp = require("cmp_nvim_lsp")
 
@@ -17,6 +19,9 @@ return {
     local opts = { noremap = true, silent = true }
     local on_attach = function(client, bufnr)
       opts.buffer = bufnr
+
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
 
       -- set keybinds
       opts.desc = "Show LSP references"
@@ -41,7 +46,10 @@ return {
       keymap.set("n", "<F2>", vim.lsp.buf.rename, opts) -- smart rename
 
       opts.desc = "Show buffer diagnostics"
-      keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+      keymap.set("n", "<leader>d", "<cmd>Telescope diagnostics bufnr=0<CR>", opts) -- show  diagnostics for file
+
+      opts.desc = "Show project diagnostics"
+      keymap.set("n", "<leader>D", "<cmd>Telescope diagnostics<CR>", opts) -- show  diagnostics for file
 
       opts.desc = "Show line diagnostics"
       keymap.set("n", "<leader>pd", vim.diagnostic.open_float, opts) -- show diagnostics for line
@@ -61,6 +69,9 @@ return {
 
     -- used to enable autocompletion (assign to every lsp server config)
     local capabilities = cmp_nvim_lsp.default_capabilities()
+
+
+    -- capabilities.workspace.didChangeWatchedFiles.dynamicRegistration = true -- update golang modules
 
     -- Change the Diagnostic symbols in the sign column (gutter)
     -- (not in youtube nvim video)
@@ -137,6 +148,44 @@ return {
       on_attach = on_attach,
     })
 
+    -- configure golang server
+    lspconfig["gopls"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      cmp = { "gopls" },
+      filetypes = { "go", "gomod", "gowork", "gotmpl" },
+      root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+      settings = {
+        gopls = {
+          completeUnimported = true,
+          usePlaceholders = true,
+          analyses = {
+            unusedparams = true,
+          },
+        },
+      },
+    })
+
+    -- configure sql server
+    lspconfig["sqlls"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { 'sql' },
+      root_dir = function(_)
+        return vim.loop.cwd()
+      end,
+    })
+
+    -- configure json server
+    lspconfig["jsonls"].setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      filetypes = { 'json' },
+      root_dir = function(_)
+        return vim.loop.cwd()
+      end,
+    })
+
     -- configure lua server (with special settings)
     lspconfig["lua_ls"].setup({
       capabilities = capabilities,
@@ -159,7 +208,8 @@ return {
     })
 
     vim.diagnostic.config({
-      underline = false
+      underline = false,
+      virtual_text = false
     })
   end,
 }

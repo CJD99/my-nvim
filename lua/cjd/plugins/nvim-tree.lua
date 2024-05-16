@@ -15,8 +15,10 @@ return {
     -- configure nvim-tree
     nvimtree.setup({
       view = {
-        width = 35,
-        relativenumber = true,
+        side = "right",
+        -- width = 40,
+        adaptive_size = true,
+        -- relativenumber = true,
       },
       -- change folder arrow icons
       renderer = {
@@ -48,14 +50,22 @@ return {
       git = {
         ignore = false,
       },
+      system_open = {
+        cmd = "firefox"
+      }
     })
 
     -- set keymaps
     local keymap = vim.keymap -- for conciseness
+    local api = require("nvim-tree.api")
 
     -- keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" }) -- toggle file explorer
     keymap.set("n", "<leader>e", "<cmd>NvimTreeFindFileToggle<CR>", { desc = "Toggle file explorer on current file" }) -- toggle file explorer on current file
     -- keymap.set("n", "<leader>ec", "<cmd>NvimTreeCollapse<CR>", { desc = "Collapse file explorer" }) -- collapse file explorer
     -- keymap.set("n", "<leader>er", "<cmd>NvimTreeRefresh<CR>", { desc = "Refresh file explorer" }) -- refresh file explorer
+
+
+    keymap.set("n", "?", api.tree.toggle_help, { desc = "Toggle help" })
+    keymap.set("n", "s", api.node.run.system, { desc = "Run file on system"} )
   end,
 }

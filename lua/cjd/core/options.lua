@@ -5,15 +5,6 @@ vim.g.maplocalleader = ' '
 vim.opt.number = true
 vim.opt.relativenumber = true
 
--- tabs & identation
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.expandtab = true
-vim.opt.autoindent = true
-vim.opt.smarttab = true
-vim.opt.smartindent = true
-
 -- search settings
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -21,7 +12,7 @@ vim.o.hlsearch = false
 
 -- appearance
 vim.opt.termguicolors = true
-vim.opt.background = ""
+vim.opt.background = "dark"
 vim.opt.signcolumn = "yes"
 vim.opt.scrolloff = 8
 
@@ -50,3 +41,15 @@ vim.opt.fillchars = { fold = " " }
 vim.opt.foldmethod = "indent"
 vim.opt.foldenable = false
 vim.opt.foldlevel = 99
+
+vim.cmd [[ let &t_ut='' ]]
+
+vim.cmd([[ autocmd VimEnter * set titlestring= ]])
+
+vim.cmd([[
+  augroup NoAutoComment
+    au!
+    au FileType * setlocal formatoptions-=cro
+  augroup end
+]])
+

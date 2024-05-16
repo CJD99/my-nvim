@@ -16,6 +16,12 @@ return {
 
     local lspkind = require("lspkind")
 
+    local has_words_before = function()
+      unpack = unpack or table.unpack
+      local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+      return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+    end
+
     vim.cmd [[ autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} }) ]]
 
     -- loads vscode style snippets from installed plugins (e.g. friendly-snippets)
@@ -31,18 +37,42 @@ return {
         end,
       },
       mapping = cmp.mapping.preset.insert({
-        ["<S-TAB>"] = cmp.mapping.select_prev_item(), -- previous suggestion
-        ["<TAB>"] = cmp.mapping.select_next_item(), -- next suggestion
         ["<C-k>"] = cmp.mapping.scroll_docs(-4),
         ["<C-j>"] = cmp.mapping.scroll_docs(4),
         ["<C-Space>"] = cmp.mapping.complete(), -- show completion suggestions
         ["<C-e>"] = cmp.mapping.abort(), -- close completion window
         ["<CR>"] = cmp.mapping.confirm({ select = false }),
+
+        ["<TAB>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item()
+          elseif luasnip.expand_or_jumpable() then
+            luasnip.expand_or_jump()
+          elseif has_words_before() then
+            cmp.complete()
+          else fallback()
+          end
+        end),
+
+        ["<S-TAB>"] = cmp.mapping(function (fallback)
+          if cmp.visible() then
+            cmp.select_prev_item()
+          elseif luasnip.jumpable(-1) then
+            luasnip.jump(-1)
+          else
+            fallback()
+          end
+        end),
+
+
+
       }),
+
       -- sources for autocompletion
       sources = cmp.config.sources({
-        { name = "nvim_lsp" },
         { name = "luasnip" }, -- snippets
+        { name = "nvim_lsp" },
+        { name = "codeium" },
         { name = "buffer" }, -- text within current buffer
         { name = "path" }, -- file system paths
       }),

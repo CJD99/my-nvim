@@ -13,7 +13,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({ { import = "cjd.plugins" }, { import = "cjd.plugins.lsp" } }, {
   install = {
-    colorscheme = { "kanagawa" },
+    missing = true,
+    colorscheme = { "gruvbox-material", "darcula-solid", "catpuccin", "kanagawa" },
   },
   checker = {
     enabled = true,
