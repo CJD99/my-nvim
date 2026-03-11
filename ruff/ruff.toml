@@ -1,0 +1,28 @@
+line-length = 100
+indent-width = 4
+
+exclude = [
+  "migrations",
+  "app/main/features/models.py"
+]
+
+lint.select = [
+    "ALL", # include all the rules, including new ones
+]
+
+lint.ignore = [
+    #### modules
+    "ANN", # flake8-annotations
+    "COM", # flake8-commas
+    "C90", # mccabe complexity
+    "DJ",  # django
+    "EXE", # flake8-executable
+    "T10", # debugger
+
+    #### specific rules
+    "E402",   # false positives for local imports
+    "TRY003", # external messages in exceptions are too verbose
+    "TD002",
+    "TD003",
+    "FIX002", # too verbose descriptions of todos
+]
